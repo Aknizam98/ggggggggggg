@@ -10,8 +10,9 @@ from aiogram.types import *
 
 # Created module - Созданный модуль
 from core.config import *
-from database.dbusers import check_users, registrstion_users, search_inline_mode
 from core.button import *
+from database.dbpars import *
+from database.dbusers import check_users, registrstion_users, search_inline_mode
 
 system("clear")
 bot = Bot(token=TOKEN, parse_mode="HTML")
@@ -66,6 +67,34 @@ async def inline_query(inline_query: InlineQuery):
     await inline_query.answer(articles, cache_time=1, is_personal=True)
 
 
+@dp.message_handler(content_types=ContentTypes.TEXT)
+async def message_text_user(message: Message):
+    user_id = message.chat.id
+    check = check_users(user_id)
+    if check is None:
+        await message.answer("Сначало пройди регистрацию")
+    else:
+        if message.text.lower() == "меню":
+            await message.answer("Вы в меню", reply_markup=auth_markup)
+            await message.delete()
+        elif message.text.lower() == "категории":
+            category_db = ReplyKeyboardMarkup(resize_keyboard=True)
+            for cotegory in get_cotegory_events():
+                category_db.add(KeyboardButton(text=cotegory))
+            category_db.add(KeyboardButton(text="Меню"))
+            await message.answer("Вы в катигории", reply_markup=category_db)
+
+        elif message.text in get_cotegory_events():
+            values_category_db = ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+            for values_category in get_values_category_events(message.text):
+                values_category_db.add(KeyboardButton(text=values_category))
+            values_category_db.add(KeyboardButton(text="Меню"))
+            await message.answer(f"Вы в разделе: {message.text}", reply_markup=values_category_db)
+
+        elif message.text in get_values_category_events():
+            text = get_title_category_events()
+            await message.reply(text)
+        
 
 
 if __name__ == '__main__':

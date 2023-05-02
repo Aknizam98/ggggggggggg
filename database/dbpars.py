@@ -36,3 +36,38 @@ def add_information_event(cotigory, title, info, date, url, photo):
 
     connection.commit()
     cursor.close()
+
+
+def get_cotegory_events():
+    cursor = connection.cursor()
+    cursor.execute("SELECT cotigory from events")
+    all_events = cursor.fetchall()
+
+    data = set()
+
+    for i in all_events:
+        data.add(i[0])
+    return data
+
+
+def get_values_category_events(text):
+    cursor = connection.cursor()
+    cursor.execute(f"SELECT title FROM events WHERE cotigory = '{text}'")
+    all_events = cursor.fetchall()
+
+    data = set()
+    
+    for i in all_events:
+        data.add(i[0])
+    
+    return data
+
+
+def get_title_category_events(text):
+    cursor = connection.cursor()
+    cursor.execute(f"SELECT * FROM events WHERE title = '{text}'")
+    event = cursor.fetchone()
+    # (id, category, title, information, data, url, photo, createt)
+    event_information_text = f"\n<b>Заголовок:</b> <a href='{event[6]}'>{event[2]}</a>\n<b>Котегория:</b> {event[1]}\n<b>Информация:</b> {event[3]}\n<b>Дата:</b> {event[4]}\n<b>Подробнее:</b> <a href='{event[5]}'>Нажмите тут</a>"
+
+    return event_information_text

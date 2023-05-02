@@ -12,10 +12,8 @@ auth_markup = ReplyKeyboardMarkup(resize_keyboard=True).add(
     KeyboardButton(text="Адрес"),
     KeyboardButton(text="О Нас"),
 )
-
-calendar_db = ReplyKeyboardMarkup(resize_keyboard=True)
-
 category_db = ReplyKeyboardMarkup(resize_keyboard=True)
+calendar_db = ReplyKeyboardMarkup(resize_keyboard=True)
 
 next_back_db = ReplyKeyboardMarkup(resize_keyboard=True).add(
     KeyboardButton(text=">>>"),

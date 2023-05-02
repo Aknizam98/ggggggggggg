@@ -41,6 +41,8 @@ def registrstion_users(user_id, username, first_name, last_name, phone):
     cursor.execute("INSERT INTO users(user_id, username,\
         first_name, last_name, phone) VALUES(%s, %s, %s, %s, %s)", 
         (user_id, username, first_name, last_name, phone))
+    connection.commit()
+    cursor.close()
 
 
 def search_inline_mode(text):
