@@ -58,7 +58,10 @@ async def inline_query(inline_query: InlineQuery):
             title = f"{result[2]}",
             description = f"{result[3]}",
             url = f"{result[5]}",
-            input_message_content = InputTextMessageContent(message_text = "hello")
+            hide_url=True,
+            input_message_content = InputTextMessageContent(
+                message_text = f"\n<b>Заголовок:</b> <a href='{result[6]}'>{result[2]}</a>\n<b>Котегория:</b> {result[1]}\n<b>Информация:</b> {result[3]}\n<b>Дата:</b> {result[4]}\n<b>Подробнее:</b> <a href='{result[5]}'>Нажмите тут</a>"
+            )
         )
         articles.append(article)
         if len(articles) == 50:
@@ -91,9 +94,17 @@ async def message_text_user(message: Message):
             values_category_db.add(KeyboardButton(text="Меню"))
             await message.answer(f"Вы в разделе: {message.text}", reply_markup=values_category_db)
 
-        elif message.text in get_values_category_events():
-            text = get_title_category_events()
+        elif message.text in check_title():
+            text = get_title_category_events(message.text)
             await message.reply(text)
+        
+        # if message.text.lower() == "места":
+        #     location_db = ReplyKeyboardMarkup(resize_keyboard=True)
+        #     location_db.add(KeyboardButton(text="Меню"))
+        #     for location in get_location():
+        #         location_db.add(KeyboardButton(text=location[1]))
+        
+            
         
 
 

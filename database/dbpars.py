@@ -50,6 +50,19 @@ def get_cotegory_events():
     return data
 
 
+def check_title():
+    cursor = connection.cursor()
+    cursor.execute(f"SELECT title FROM events")
+    all_titles = cursor.fetchall()
+    
+    data = set()
+    for i in all_titles:
+        data.add(i[0])
+    
+    return data
+
+
+
 def get_values_category_events(text):
     cursor = connection.cursor()
     cursor.execute(f"SELECT title FROM events WHERE cotigory = '{text}'")
@@ -71,3 +84,38 @@ def get_title_category_events(text):
     event_information_text = f"\n<b>Заголовок:</b> <a href='{event[6]}'>{event[2]}</a>\n<b>Котегория:</b> {event[1]}\n<b>Информация:</b> {event[3]}\n<b>Дата:</b> {event[4]}\n<b>Подробнее:</b> <a href='{event[5]}'>Нажмите тут</a>"
 
     return event_information_text
+
+
+# ----------------------------------------------------------------
+
+def add_information_location(title, info, url, photo):
+    cursor = connection.cursor()
+    cursor.execute(
+        "CREATE TABLE IF NOT EXISTS location (id SERIAL PRIMARY KEY,\
+        title VARCHAR(255) NOT NULL,\
+        information VARCHAR(255) NOT NULL,\
+        url TEXT NOT NULL,\
+        photo TEXT DEFAULT NULL,\
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)"
+    )
+    cursor.execute(f"SELECT * FROM location WHERE title = '{title}'\
+        and information = '{info}' \
+        and url = '{url}' and photo = '{photo}'")
+    check_one = cursor.fetchone()
+
+    if check_one is None:
+        cursor.execute("INSERT INTO location (title, information, url, photo)\
+            VALUES(%s, %s, %s, %s)", (title, info, url, photo))
+    else:
+        pass
+
+    connection.commit()
+    cursor.close()
+
+
+def get_location():
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM location")
+    all_location = cursor.fetchall()
+
+    return all_location
