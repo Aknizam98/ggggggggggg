@@ -7,9 +7,9 @@ reg_markup = ReplyKeyboardMarkup(resize_keyboard=True).add(
 
 auth_markup = ReplyKeyboardMarkup(resize_keyboard=True).add(
     KeyboardButton(text="Категории"),
-    KeyboardButton(text="Дата"),
-    KeyboardButton(text="Места"),
-    KeyboardButton(text="Адрес"),
+    # KeyboardButton(text="Дата"),
+    # KeyboardButton(text="Места"),
+    # KeyboardButton(text="Адрес"),
     KeyboardButton(text="О Нас"),
 )
 category_db = ReplyKeyboardMarkup(resize_keyboard=True)

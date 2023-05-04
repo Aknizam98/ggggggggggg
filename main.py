@@ -11,6 +11,7 @@ from aiogram.types import *
 # Created module - Созданный модуль
 from core.config import *
 from core.button import *
+from core.inline import *
 from database.dbpars import *
 from database.dbusers import check_users, registrstion_users, search_inline_mode
 
@@ -27,8 +28,8 @@ async def start(message: Message):
     if check is None:
         await message.reply("Вы не зарегистрированы", reply_markup=reg_markup)
     else:
-        await message.reply(
-        "Вы уже у нас зарегистрированы, пользуйтесь на здоровье 😇", reply_markup=auth_markup)
+        await message.reply("Инфо о боте", reply_markup=auth_inline)
+        await message.reply("Вы уже у нас зарегистрированы, пользуйтесь на здоровье 😇", reply_markup=auth_markup)
         
 
 @dp.message_handler(content_types=ContentTypes.CONTACT)
@@ -97,15 +98,28 @@ async def message_text_user(message: Message):
         elif message.text in check_title():
             text = get_title_category_events(message.text)
             await message.reply(text)
+
         
-        # if message.text.lower() == "места":
-        #     location_db = ReplyKeyboardMarkup(resize_keyboard=True)
-        #     location_db.add(KeyboardButton(text="Меню"))
-        #     for location in get_location():
-        #         location_db.add(KeyboardButton(text=location[1]))
-        
-            
-        
+@dp.callback_query_handler(text_contains="menu_")
+async def menu_callback(call: CallbackQuery):
+    if call.data and call.data.startswith("menu_"):
+        code = call.data[-1:]
+        if code.isdigit():
+            code = int(code)
+        if code == 1:
+            location_inline.inline_keyboard = []
+            num = 0
+            for location in get_location():
+                location_inline.add(
+                    InlineKeyboardButton(text=location[1], callback_data=f"mesta_{num}")
+                )
+                num += 1
+            location_inline.add(InlineKeyboardButton(text="Меню", callback_data="menu"))
+            await call.message.edit_reply_markup(reply_markup=location_inline)
+        if code == 2:
+            pass
+        if code == 3:
+            pass
 
 
 if __name__ == '__main__':

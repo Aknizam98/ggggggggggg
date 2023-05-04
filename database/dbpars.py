@@ -1,6 +1,7 @@
 import psycopg2
 from os import getenv
 from dotenv import load_dotenv
+from random import randint
 load_dotenv()
 
 connection = psycopg2.connect(
@@ -113,9 +114,12 @@ def add_information_location(title, info, url, photo):
     cursor.close()
 
 
-def get_location():
+def get_location() -> list:
     cursor = connection.cursor()
-    cursor.execute("SELECT * FROM location")
-    all_location = cursor.fetchall()
+    data = []
+    for location in range(1, 11):
+        cursor.execute(f"SELECT * FROM location WHERE id = {randint(1, 1800)}")
+        one_location = cursor.fetchone()
+        data.append(one_location)
 
-    return all_location
+    return data
